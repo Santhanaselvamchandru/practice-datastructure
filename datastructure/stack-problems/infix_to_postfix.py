@@ -1,56 +1,73 @@
-#create stack
+# create stack
 class createStack():
-    def __init__(self,maxsize):
-        self.maxsize = maxsize
+    def __init__(self):
         self.top = -1
-        self.temp = []
-        self.output = []
-#push operation
+        self.arr = []
+        self.output = [] 
+
+# stack array is empty or not
+def isEmpty(stack):
+    return (len(stack.arr) == 0 )
+
+# push operands in to stack
 def push(stack,item):
-    if(stack.top == stack.maxsize):
-        print('stack is overflow')
-        return
     stack.top += 1
-    stack.temp.insert(stack.top,item)
-#pop operation
+    stack.arr.insert(stack.top,item)
+
+
+# pop operands  from stack
 def pop(stack):
     if(stack.top == -1):
         print('stack is underflow')
         return
-    temp1 = stack.temp[stack.top]
+    temp = stack.arr[stack.top]
     stack.top -= 1
-    return temp1
-# precedence of operators
+    return temp
+
+# precedence of operator
 def prec(sympol):
-    if(sympol == '/' or sympol == '*'):
+    if(sympol == '^'):
+        return 4
+    elif(sympol == '/' or sympol == '*'):
         return 3
-    elif(sympol == '-' or sympol == '+'):
+    elif(sympol == '+' or sympol == '-'):
         return 2
     else:
         return 1
-
-
+# convert infix to postfix
 def conversion(stack,exp):
-    for i in range(0,len(exp),1):
-        if(exp[i].isalpha()):
-            stack.output.append(exp[i])
-        else:
-            if(len(stack.temp) == 0 ):
-                push(stack,exp[i])                
-            elif(prec(stack.temp[stack.top]) >= prec(exp[i]) ):
-                push(stack,exp[i])
+    for i in exp:
+        if( i.isalnum()):
+            stack.output.append(i)
+        elif(i == '('):
+            push(stack,i)
+        elif(i == ')'):
+            if(isEmpty(stack)):
+                print('Expression is not valid')
+                break
             else:
-                while(prec(stack.temp[stack.top]) < prec(exp[i]) and stack.top >= 0 ):
+                while(not stack.arr[stack.top] == '(' and not isEmpty(stack)):
+                    sym = pop(stack)
+                    stack.output.append(sym)
+                pop(stack)
+        else:
+            if(isEmpty(stack)):
+                push(stack,i)
+            elif(prec(stack.arr[stack.top]) <= prec(i)):
+                push(stack,i)
+            else:
+                while(not prec(stack.arr[stack.top]) <= prec(i) and not isEmpty(stack)):
                     stack.output.append(pop(stack))
-                push(stack,exp[i])
-
-    if(stack.top >= 0):
+    if(not isEmpty(stack)):
         for i in range(stack.top,-1,-1):
             stack.output.append(pop(stack))
-    
-    for i in range(0,len(stack.output),1):
-        print(stack.output[i], end = "")
 
-obj = createStack(50)
-expr = 'a+b'
-conversion(obj,expr)
+    # show postfix expression
+    for i in range(0,len(stack.output),1):
+        print(stack.output[i],end= "")
+
+
+        
+s = createStack()
+expression = '(1+2)-(4-3)*(6/2)'
+conversion(s,expression)
