@@ -1,4 +1,5 @@
-# using array
+# successive pair elements
+# input [1,2,3,4,5]    output '(1,2),(3,4)'
 class createQueue():
     def __init__(self):
         self.queue = list()
@@ -19,6 +20,7 @@ def dequeue(q):
     if not q.queue:
         print('Empty queue')
         return
+    temp = q.queue[q.front]
     q.front += 1
     if q.front >= q.rear:
         q.front = q.rear = -1
@@ -33,16 +35,26 @@ def show(q,msg):
     for i in range(q.front,q.rear+1,1):
         print(q.queue[i],end=' ')
     print(end='\n')
+
+# successive pair 
+def succ(q):
+    for i in range(q.front,round(q.rear/2)+1,1):
+        if q.front == -1:
+            break
+        temp1 = dequeue(q)
+        temp2 = dequeue(q)
+        if(temp1 and temp2):
+            print('(',temp1,',',temp2,')',end=" ")
 # instruction
 def instru(q):
-    ## insert Elements
-    enqueue(q,10)
-    enqueue(q,20)
-    enqueue(q,30)
-    enqueue(q,40)
-    # delete Elements
-    dequeue(q)
-    dequeue(q)
+    enqueue(q,1)
+    enqueue(q,2)
+    enqueue(q,3)
+    enqueue(q,4)
+    enqueue(q,5)
+    enqueue(q,6)
+    succ(q)
+
 
 que = createQueue()
 instru(que)
